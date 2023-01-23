@@ -1,23 +1,29 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const logger = require('morgan');
+const line = require('@line/bot-sdk');
+const hook = require("./lineEvent/hook");
+const indexRouter = require('./routes/index')
+require('dotenv').config();
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
-var app = express();
-
+const config = {
+    channelAccessToken:process.env.CHANNEL_ACCESS_TOKEN,
+    channelSecret:process.env.CHANNEL_SECRET
+}
+const app = express();
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use(bodyParser.json())
+app.use('/',indexRouter)
 
-app.listen(8001, function (){
-    console.log("Server is running on port" + 8001);
+app.listen(9001, function (){
+    console.log("Server is running on port" + 9001);
 })
 module.exports = app;
+
+
+
